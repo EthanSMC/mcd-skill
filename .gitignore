@@ -1,0 +1,21 @@
+# Token 和用户数据（敏感）
+data/.mcd-token
+data/mcd-preferences.json
+data/mcd-orders.md
+data/mcd-calories.md
+
+# 日志
+logs/
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
