@@ -2,7 +2,6 @@
 
 > 🤖 装上就能用，零配置完成麦当劳外卖完全场景。支持 OpenClaw / Claude Code / Pi / Codex 等 Agent 框架。
 
-[[reply_to_current]]
 
 ---
 
