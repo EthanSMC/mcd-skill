@@ -85,6 +85,7 @@ Agent：
 | `coupon-check.py` | 自动领取优惠券 | 每天cron |
 | `update-prefs.py` | 偏好增删改查 | 用户修改时 |
 | `track-order.py` | 订单追踪 | 用户报订单号时 |
+| `mcp_client.py` | MCP 调用封装 | 所有脚本共用 |
 | `monthly-report.py` | 月度消费报告 | 每月cron |
 
 ---

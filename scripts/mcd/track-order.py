@@ -4,7 +4,7 @@ import sys, os
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from mcp import run_mcporter
+from mcp_client import run_mcporter
 
 STATUS_MAP = {1:"已下单", 2:"已接单", 3:"制作中", 4:"骑手取餐", 5:"配送中", 6:"已送达", 7:"已完成"}
 

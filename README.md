@@ -138,8 +138,8 @@ mcd-skill/
 ├── README.md                    ← 本文件（Agent 必读）
 ├── SKILL.md                     ← Skill 定义文档
 ├── scripts/mcd/
-│   ├── config.py               ← 路径配置（自动检测框架）
-│   ├── mcp.py                  ← MCP 调用封装
+│   ├── config.py               ← 路径配置 + 工具函数
+│   ├── mcp_client.py           ← MCP 调用封装
 │   ├── onboarding.py           ← 首次引导（npm install 后运行）
 │   ├── coupon-check.py         ← 每日领券 cron
 │   ├── expiring-points.py      ← 临期积分 cron

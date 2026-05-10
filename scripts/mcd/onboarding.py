@@ -6,21 +6,15 @@ McDonald's Skill 首次引导流程
 用法:
   python3 onboarding.py
 """
+import json
 import sys
 import os
 from datetime import datetime
 
 # 导入配置（自动检测路径）
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-try:
-    from config import *
-except ImportError:
-    # 降级：本地目录
-    import importlib.util
-    spec = importlib.util.spec_from_file_location("config", os.path.join(os.path.dirname(__file__), "config.py"))
-    config = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(config)
-    globals().update({k: v for k, v in config.__dict__.items() if not k.startswith("_")})
+from config import *
+from mcp_client import run_mcporter
 
 # ── Token 配置步骤（新增）──────────────────────────
 def step0_token_setup():
@@ -205,8 +199,6 @@ def step7_summary():
     print()
 
 def main():
-    import json
-
     # 检查是否已初始化
     if os.path.exists(PREFS_FILE):
         print("[McDonald's Skill]")

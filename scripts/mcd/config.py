@@ -91,3 +91,33 @@ def mcd_check_token():
 def _now():
     from datetime import datetime
     return datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+# ── 工具函数 ──────────────────────────────────────
+def parse_calories(item_name, quantity=1):
+    """估算商品热量（千卡）"""
+    CALORIE_ESTIMATE = {
+        "巨无霸": 560, "麦辣": 490, "板烧": 430, "麦香鱼": 380,
+        "吉士": 310, "安格斯": 680, "薯条": 330, "中薯": 330,
+        "大薯": 460, "鸡翅": 290, "鸡块": 280, "可乐": 150,
+        "中可": 150, "大可": 210, "雪冰": 180, "菠萝雪冰": 200,
+        "苹果派": 220, "圆筒": 130, "甜筒": 130, "麦旋风": 270,
+        "小食自由拼": 350,
+    }
+    for keyword, cal in CALORIE_ESTIMATE.items():
+        if keyword in item_name:
+            return cal * quantity
+    return 300 * quantity
+
+
+def now_str():
+    from datetime import datetime
+    return datetime.now().strftime("%Y-%m-%d %H:%M")
+
+
+def is_last_day_of_month():
+    """判断今天是否是本月最后一天"""
+    from datetime import datetime, timedelta
+    today = datetime.now()
+    tomorrow = today + timedelta(days=1)
+    return tomorrow.month != today.month

@@ -4,10 +4,7 @@ import sys, os, json, re
 from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from config import CALORIES_FILE, DATA_DIR
-from mcp import parse_calories
-
-CALORIE_FILE = CALORIES_FILE
+from config import CALORIES_FILE, DATA_DIR, parse_calories
 
 def add_from_order(order_json_str):
     data = json.loads(order_json_str)
@@ -21,14 +18,14 @@ def add_from_order(order_json_str):
     record += f"- 总热量: ~{total_cal}kcal\n"
     for item in items:
         record += f"- {item.get('name')} x{item.get('quantity',1)}: ~{parse_calories(item.get('name',''), item.get('quantity',1))}kcal\n"
-    os.makedirs(os.path.dirname(CALORIE_FILE), exist_ok=True)
-    with open(CALORIE_FILE, "a", encoding="utf-8") as f:
+    os.makedirs(os.path.dirname(CALORIES_FILE), exist_ok=True)
+    with open(CALORIES_FILE, "a", encoding="utf-8") as f:
         f.write(record)
     print(f"✅ 已记录: ~{total_cal}kcal | {len(items)}件商品")
 
 def get_stats(date_str):
     try:
-        content = open(CALORIE_FILE, encoding="utf-8").read()
+        content = open(CALORIES_FILE, encoding="utf-8").read()
     except FileNotFoundError:
         return 0
     blocks = [b for b in content.split("## ") if b.startswith(date_str)]
@@ -55,7 +52,7 @@ def show_report():
     month_str = today.strftime("%Y-%m")
     month_cal = 0
     try:
-        content = open(CALORIE_FILE, encoding="utf-8").read()
+        content = open(CALORIES_FILE, encoding="utf-8").read()
         month_cal = sum(int(l.split("~")[1].replace("kcal",""))
             for b in content.split("## ")
             if b.startswith(month_str)

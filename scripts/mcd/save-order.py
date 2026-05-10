@@ -5,7 +5,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config import PREFS_FILE, ORDERS_FILE, DATA_DIR
-from mcp import run_mcporter
+from mcp_client import run_mcporter
 
 def save_order(order_data):
     now = datetime.now()

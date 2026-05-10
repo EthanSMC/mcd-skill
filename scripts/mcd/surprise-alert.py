@@ -2,7 +2,7 @@
 """今日惊喜提醒"""
 import sys, os
 from config import *
-from mcp import run_mcporter
+from mcp_client import run_mcporter
 
 def main():
     from datetime import datetime

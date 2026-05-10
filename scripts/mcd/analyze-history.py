@@ -5,7 +5,6 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config import ORDERS_FILE, PREFS_FILE, DATA_DIR
-from mcp import parse_calories
 
 ITEM_TAGS = {
     "巨无霸": {"spicy": 0, "salty": 3, "sweet": 0, "meat": "beef"},

@@ -4,8 +4,8 @@ import sys, os, re
 from datetime import datetime, timedelta
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from config import PREFS_FILE, DATA_DIR, mcd_err
-from mcp import run_mcporter, call_mcd, is_last_day_of_month
+from config import PREFS_FILE, DATA_DIR, mcd_err, is_last_day_of_month
+from mcp_client import run_mcporter
 
 def check_and_show():
     account = run_mcporter("query-my-account")

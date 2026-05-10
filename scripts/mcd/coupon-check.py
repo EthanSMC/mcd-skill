@@ -5,7 +5,7 @@ from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from config import mcd_log
-from mcp import run_mcporter
+from mcp_client import run_mcporter
 
 def main():
     print(f"[{datetime.now().strftime('%Y-%m-%d %H:%M')}] 优惠券检查")

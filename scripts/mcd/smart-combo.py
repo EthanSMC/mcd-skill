@@ -2,7 +2,6 @@
 """Smart Combo 推荐器 - 3个方案供选择"""
 import sys, os, json
 from config import PREFS_FILE
-from mcp import run_mcporter, parse_calories
 
 PLANS = [
     {
