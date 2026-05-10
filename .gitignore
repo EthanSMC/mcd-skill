@@ -13,6 +13,10 @@ __pycache__/
 *.pyc
 *.pyo
 
+# Eval results (large HTML reports)
+evals/optimization_report.html
+evals/results/
+
 # macOS
 .DS_Store
 
