@@ -1,121 +1,134 @@
-# McDonald's 点餐助手 Skill
+---
+name: mcd-skill
+description: >-
+  麦当劳 (McDonald's / 金拱门): order meals, browse the menu, check deals and coupons,
+  manage taste preferences, track delivery, review spending and points (积分), set a budget,
+  or check calories. Trigger whenever the user mentions 麦当劳, 金拱门, McDonald's, or any
+  named McDonald's product (巨无霸, 麦辣鸡腿堡, etc.) — even in short commands like 点麦当劳.
+  Also trigger when a user wants to order food, check promotions, or manage food preferences
+  involving McDonald's. Exclude: KFC/肯德基, Burger King/汉堡王, general restaurant
+  recommendations, unbranded 外卖/快餐 queries, and bank/card rewards points.
+---
 
-*装上就能用，零配置完成麦当劳外卖完全场景*
+# McDonald's 点餐助手
+
+A zero-configuration skill for the full McDonald's delivery experience — ordering, deals, coupons, points tracking, and taste preference learning.
 
 ---
 
-## 🚀 首次安装
+## First-time setup
 
-**Step 1：** 配置 Token
-```bash
-mkdir -p data && echo "你的Token" > data/.mcd-token
-```
+Before using any feature, the user needs a valid McDonald's token:
 
-**Step 2：** 运行引导
-```bash
-python3 scripts/mcd/onboarding.py
-```
+1. Ask the user to open the 麦当劳 App, log in, visit https://mcp.mcd.cn, scan the QR code to authorize, and copy the token.
+2. Save the token: `mkdir -p data && echo "<token>" > data/.mcd-token`
+3. Run the onboarding script to verify the token and initialize preferences:
+   ```bash
+   python3 scripts/mcd/onboarding.py
+   ```
 
-**Step 3：** 开始使用 — 对 Agent 说「点麦当劳」
+Onboarding auto-checks: token validity, account points, coupon binding, delivery addresses, and taste preferences.
 
----
-
-## 🍔 完整点餐流程
-
-```
-用户：「点麦当劳」
-Agent：
-  1. scripts/mcd/surprise-alert.py → 展示今日惊喜
-  2. 检查历史订单数 < 5？
-       ├─ 是 → 直接问「你想吃什么」
-       └─ 否 → scripts/mcd/smart-combo.py → 展示3个方案
-
-用户：选了方案
-Agent：
-  mcporter call mcdonalds.calculate-price ...
-  → 展示价格 + 最优券 → 用户确认
-
-用户：确认
-Agent：
-  mcporter call mcdonalds.create-order ...
-  → 返回支付链接
-
-用户：支付完成，订单号 1030938730000733964700499858
-Agent：
-  scripts/mcd/track-order.py → 追踪状态
-  scripts/mcd/save-order.py → 记录订单
-  （满5单）scripts/mcd/analyze-history.py → 更新偏好
-```
+If the user says they don't have a token, walk them through the steps above before doing anything else.
 
 ---
 
-## 🔐 偏好解锁规则
+## Core ordering flow
 
-| 历史订单 | 解锁状态 |
-|:---:|:---|
-| 0-4 笔 | ❌ 不解锁，用默认值（辣3/咸4/甜3） |
-| ≥5 笔 | ✅ 解锁 Smart Combo + 口味推荐 |
+When the user says something like "点麦当劳" or "I want McDonald's", follow this sequence:
 
-**为什么5笔？** 历史统计比单次数据可靠，避免偶然性干扰。
+### Step 1: Show today's surprises
+Run `scripts/mcd/surprise-alert.py` to display today's deals, new items, and limited-time offers. This gives the user context on what's available before they decide.
+
+### Step 2: Recommend or ask
+Check `data/mcd-orders.md` for the number of past orders:
+
+- **< 5 orders**: Don't try to analyze preferences — there isn't enough data. Just ask "What do you feel like eating?" and let the user browse freely.
+- **≥ 5 orders**: Run `scripts/mcd/smart-combo.py` to generate 3 personalized meal plans based on their taste profile and budget. Present all three with prices and tags.
+
+### Step 3: Calculate price and apply best coupon
+Once the user picks a meal, use the MCP to calculate the price, then apply the best available coupon. Show the final price before creating the order.
+
+Use `mcporter call mcdonalds.calculate-price` and `mcporter call mcdonalds.query-store-coupons` — see `docs/MCP_API.md` for exact parameters.
+
+### Step 4: Create order
+Use `mcporter call mcdonalds.create-order` with the confirmed items. The API returns a payment link — share it with the user so they can pay through the McDonald's app.
+
+### Step 5: Post-order tracking
+After the user shares the order number (34 digits):
+1. Run `scripts/mcd/track-order.py <orderNumber>` to track delivery status
+2. Run `scripts/mcd/save-order.py '<orderJSON>'` to record the order
+3. If the order count reaches 5, run `scripts/mcd/analyze-history.py` to unlock preference learning
 
 ---
 
-## 📁 数据文件
+## Other user interactions
 
-| 文件 | 作用 |
+| User says | What to do |
 |:---|:---|
-| `data/.mcd-token` | 用户麦当劳 Token |
-| `data/mcd-preferences.json` | 偏好档案 |
-| `data/mcd-orders.md` | 历史订单（追加） |
-| `data/mcd-calories.md` | 热量记录 |
+| 有什么优惠 / any deals? | Run `scripts/mcd/surprise-alert.py` |
+| 查积分 / check my points | Run `scripts/mcd/expiring-points.py check` |
+| 我不吃辣 / I don't like spicy | Run `scripts/mcd/update-prefs.py taste spicy 1` |
+| 喜欢甜的 / I prefer sweet | Run `scripts/mcd/update-prefs.py taste sweet 5` |
+| 查热量 / how many calories? | Run `scripts/mcd/calorie-tracker.py report` |
+| 月度报告 / monthly report | Run `scripts/mcd/monthly-report.py` |
+| Track order number ... | Run `scripts/mcd/track-order.py <34-digit-order-number>` |
+| 修改预算 / change budget | Edit `data/mcd-preferences.json` manually or guide the user |
 
 ---
 
-## 🛠️ 脚本清单
+## Key constraints
 
-| 脚本 | 作用 | 触发 |
+**5-order threshold for preference learning**: Don't analyze taste preferences from a single order — it's too noisy and accidental. The `smart-combo.py` and `analyze-history.py` scripts require at least 5 historical orders to produce reliable recommendations. This is hardcoded in the scripts for a reason.
+
+**Token expiration**: McDonald's tokens expire periodically. If any MCP call returns a 401 error, tell the user their token needs refreshing and walk them through the setup steps again.
+
+**Local data only**: All user data (preferences, order history, calories) is stored locally in the `data/` directory. Never upload or share this data.
+
+---
+
+## Script reference
+
+All scripts live under `scripts/mcd/`. Each is self-contained and can be run directly:
+
+| Script | Purpose | When to run |
 |:---|:---|:---|
-| `onboarding.py` | 首次引导+Token验证 | 首次运行 |
-| `surprise-alert.py` | 今日惊喜活动 | 点餐时 |
-| `smart-combo.py` | 3个推荐方案 | ≥5单点餐时 |
-| `save-order.py` | 记录订单到md | 下单确认后 |
-| `analyze-history.py` | 从历史学习口味 | ≥5单新订单后 |
-| `calorie-tracker.py` | 热量追踪报告 | 用户查热量时 |
-| `expiring-points.py` | 临期积分检查+自动兑换 | 每天cron |
-| `coupon-check.py` | 自动领取优惠券 | 每天cron |
-| `update-prefs.py` | 偏好增删改查 | 用户修改时 |
-| `track-order.py` | 订单追踪 | 用户报订单号时 |
-| `mcp_client.py` | MCP 调用封装 | 所有脚本共用 |
-| `monthly-report.py` | 月度消费报告 | 每月cron |
+| `onboarding.py` | First-time setup + token verification | Once, during initial setup |
+| `surprise-alert.py` | Show today's deals and events | Every time user starts an order |
+| `smart-combo.py` | Generate 3 personalized meal plans | When user has ≥5 orders and wants a recommendation |
+| `save-order.py` | Append order to history file | After each confirmed order |
+| `analyze-history.py` | Learn taste preferences from history | After reaching the 5-order threshold |
+| `calorie-tracker.py` | Show daily/weekly/monthly calorie stats | When user asks about calories |
+| `expiring-points.py` | Check points, auto-redeem on last day of month | `check` for inquiry, `auto-redeem` for cron |
+| `coupon-check.py` | Auto-claim available coupons | Daily cron (09:00) |
+| `update-prefs.py` | Read/write taste preferences | When user wants to adjust preferences |
+| `track-order.py` | Track delivery status by order number | When user provides a 34-digit order number |
+| `monthly-report.py` | Generate monthly spending + points report | Monthly cron (25th at 10:00) |
+| `mcp_client.py` | Shared MCP call wrapper | Imported by other scripts, not run directly |
+
+For detailed MCP API parameters (beCode, storeCode, etc.), read `docs/MCP_API.md`.
 
 ---
 
-## 🎁 临期积分自动兑换逻辑
+## Data files
 
-```
-每天 10:00 检查：
-  今天是本月最后一天？
-    ├─ 否 → 跳过
-    └─ 是 → 自动兑换性价比最高的可兑方案
-              → 调用 mall-create-order
-              → 通知用户兑换结果
-```
+| File | Format | Purpose |
+|:---|:---|:---|
+| `data/.mcd-token` | Plain text | User's McDonald's API token |
+| `data/mcd-preferences.json` | JSON | Taste profile, budget, favorite items |
+| `data/mcd-orders.md` | Markdown | Order history (appended, not overwritten) |
+| `data/mcd-calories.md` | Markdown | Calorie tracking records |
 
----
-
-## 🔑 Token 配置
-
-Token 文件路径：`data/.mcd-token`
-
-获取方式：
-1. 麦当劳 App 登录
-2. mcp.mcd.cn 官网扫码授权
-3. 复制 Token 写入 `data/.mcd-token`
+Scripts auto-create these files as needed. The `data/` directory is created on first run if it doesn't exist.
 
 ---
 
-## ⚠️ 重要约束
+## Cron tasks (optional)
 
-- **不**从单次订单直接记录口味偏好（偶然性太大）
-- **必须**积累满5单历史才解锁偏好模块
-- **Token** 有时效，若报401请重新获取
+For fully automated operation, register these as cron/scheduled tasks in the agent framework:
+
+| Task | Schedule | Script |
+|:---|:---|:---|
+| Auto-claim coupons | Daily at 09:00 CST | `scripts/mcd/coupon-check.py` |
+| Points auto-redeem | Daily at 10:00 CST (acts on last day of month) | `scripts/mcd/expiring-points.py auto-redeem` |
+| Monthly report | 25th of each month at 10:00 CST | `scripts/mcd/monthly-report.py` |

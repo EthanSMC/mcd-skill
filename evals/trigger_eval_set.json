@@ -1,0 +1,82 @@
+[
+  {
+    "query": "点麦当劳",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我看看麦当劳今天有什么优惠活动，好久没吃了想看看有啥划算的套餐",
+    "should_trigger": true
+  },
+  {
+    "query": "我想吃巨无霸了，能帮我点一个送到家吗，用我之前常用的那个地址就行",
+    "should_trigger": true
+  },
+  {
+    "query": "查一下我的麦当劳积分还有多少，上次好像有快过期的了",
+    "should_trigger": true
+  },
+  {
+    "query": "最近金拱门有什么新品上线吗，想吃点不一样的",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我把麦当劳的口味偏好改成不吃辣，上次那个麦辣鸡腿堡把我辣得够呛",
+    "should_trigger": true
+  },
+  {
+    "query": "我这个月在麦当劳花了多少钱了，帮我拉个账单看看",
+    "should_trigger": true
+  },
+  {
+    "query": "领一下麦当劳的优惠券，别浪费了",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我追踪一下这个麦当劳的订单 1030938730000733964700499858，看看骑手到哪了",
+    "should_trigger": true
+  },
+  {
+    "query": "今天中午不知道吃啥好，看看麦当劳有啥能点的，预算50以内",
+    "should_trigger": true
+  },
+  {
+    "query": "帮我点一份肯德基的吮指原味鸡桶，送到公司",
+    "should_trigger": false
+  },
+  {
+    "query": "查一下我的招商银行信用卡积分还有多少",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我追踪这个快递单号 SF1234567890123，看看到哪了",
+    "should_trigger": false
+  },
+  {
+    "query": "麦当劳的股票最近走势怎么样，MCD现在什么价位",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我写一个快餐店的点餐系统，要支持菜品管理、下单、支付这些功能",
+    "should_trigger": false
+  },
+  {
+    "query": "汉堡怎么做才好吃，我想在家自己做一个巨无霸",
+    "should_trigger": false
+  },
+  {
+    "query": "附近有什么好吃的餐厅推荐吗，川菜粤菜都行",
+    "should_trigger": false
+  },
+  {
+    "query": "巨无霸的热量是多少卡路里，我在减肥想算算",
+    "should_trigger": false
+  },
+  {
+    "query": "帮我对比一下麦当劳和肯德基哪个更划算，我中午想吃快餐",
+    "should_trigger": false
+  },
+  {
+    "query": "我的外卖怎么还没到啊，都等了半小时了也不知道找谁",
+    "should_trigger": false
+  }
+]

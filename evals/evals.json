@@ -1,0 +1,53 @@
+{
+  "skill_name": "mcd-skill",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "点麦当劳",
+      "expected_output": "Show today's deals, check order history, recommend or ask what to eat",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "帮我看看麦当劳今天有什么优惠活动，好久没吃了想看看有啥划算的",
+      "expected_output": "Run surprise-alert.py to show today's deals and promotions",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "我想吃巨无霸了，帮我点一个送到家，我家地址你应该知道",
+      "expected_output": "Calculate price for Big Mac meal, apply best coupon, create order",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "查一下我的麦当劳积分还有多少，上次好像快过期了",
+      "expected_output": "Run expiring-points.py check to show points and expiring balance",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "最近麦当劳有什么新品上线吗，想吃点不一样的",
+      "expected_output": "Run surprise-alert.py, highlight new items with 🆕 tag",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "帮我把麦当劳的口味改成不吃辣的，上次那个麦辣鸡腿堡把我辣死了",
+      "expected_output": "Run update-prefs.py taste spicy 1, confirm the change",
+      "files": []
+    },
+    {
+      "id": 7,
+      "prompt": "我这个月在麦当劳花了多少钱了，帮我算算",
+      "expected_output": "Run monthly-report.py to show this month's spending and order count",
+      "files": []
+    },
+    {
+      "id": 8,
+      "prompt": "领一下麦当劳的优惠券，别错过了",
+      "expected_output": "Run coupon-check.py to auto-claim available coupons",
+      "files": []
+    }
+  ]
+}

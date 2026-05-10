@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="5">
+    <title>mcd-skill — Skill Description Optimization</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Lora', Georgia, serif;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 20px;
+            background: #faf9f5;
+            color: #141413;
+        }
+        h1 { font-family: 'Poppins', sans-serif; color: #141413; }
+        .explainer {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e6dc;
+            color: #b0aea5;
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+        .summary {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            border: 1px solid #e8e6dc;
+        }
+        .summary p { margin: 5px 0; }
+        .best { color: #788c5d; font-weight: bold; }
+        .table-container {
+            overflow-x: auto;
+            width: 100%;
+        }
+        table {
+            border-collapse: collapse;
+            background: white;
+            border: 1px solid #e8e6dc;
+            border-radius: 6px;
+            font-size: 12px;
+            min-width: 100%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #e8e6dc;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        th {
+            font-family: 'Poppins', sans-serif;
+            background: #141413;
+            color: #faf9f5;
+            font-weight: 500;
+        }
+        th.test-col {
+            background: #6a9bcc;
+        }
+        th.query-col { min-width: 200px; }
+        td.description {
+            font-family: monospace;
+            font-size: 11px;
+            word-wrap: break-word;
+            max-width: 400px;
+        }
+        td.result {
+            text-align: center;
+            font-size: 16px;
+            min-width: 40px;
+        }
+        td.test-result {
+            background: #f0f6fc;
+        }
+        .pass { color: #788c5d; }
+        .fail { color: #c44; }
+        .rate {
+            font-size: 9px;
+            color: #b0aea5;
+            display: block;
+        }
+        tr:hover { background: #faf9f5; }
+        .score {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+        .score-good { background: #eef2e8; color: #788c5d; }
+        .score-ok { background: #fef3c7; color: #d97706; }
+        .score-bad { background: #fceaea; color: #c44; }
+        .train-label { color: #b0aea5; font-size: 10px; }
+        .test-label { color: #6a9bcc; font-size: 10px; font-weight: bold; }
+        .best-row { background: #f5f8f2; }
+        th.positive-col { border-bottom: 3px solid #788c5d; }
+        th.negative-col { border-bottom: 3px solid #c44; }
+        th.test-col.positive-col { border-bottom: 3px solid #788c5d; }
+        th.test-col.negative-col { border-bottom: 3px solid #c44; }
+        .legend { font-family: 'Poppins', sans-serif; display: flex; gap: 20px; margin-bottom: 10px; font-size: 13px; align-items: center; }
+        .legend-item { display: flex; align-items: center; gap: 6px; }
+        .legend-swatch { width: 16px; height: 16px; border-radius: 3px; display: inline-block; }
+        .swatch-positive { background: #141413; border-bottom: 3px solid #788c5d; }
+        .swatch-negative { background: #141413; border-bottom: 3px solid #c44; }
+        .swatch-test { background: #6a9bcc; }
+        .swatch-train { background: #141413; }
+    </style>
+</head>
+<body>
+    <h1>mcd-skill — Skill Description Optimization</h1>
+    <div class="explainer">
+        <strong>Optimizing your skill's description.</strong> This page updates automatically as Claude tests different versions of your skill's description. Each row is an iteration — a new description attempt. The columns show test queries: green checkmarks mean the skill triggered correctly (or correctly didn't trigger), red crosses mean it got it wrong. The "Train" score shows performance on queries used to improve the description; the "Test" score shows performance on held-out queries the optimizer hasn't seen. When it's done, Claude will apply the best-performing description to your skill.
+    </div>
+
+    <div class="summary">
+        <p><strong>Original:</strong> McDonald&#x27;s (麦当劳 / 金拱门) food delivery ordering, deals, coupons, points tracking, and account management. Use this whenever the user mentions McDonald&#x27;s, 麦当劳, 金拱门, ordering fast food, checking food deals or coupons, tracking a food delivery order, checking loyalty points or 积分, or managing food preferences. Also trigger when the user talks about 点餐, 外卖, 快餐 in contexts that could involve McDonald&#x27;s, or when they want to order a meal, check what deals are available, or track a food order number.</p>
+        <p class="best"><strong>Best:</strong> 麦当劳 (McDonald&#x27;s / 金拱门): order meals, browse the menu, check deals and coupons, manage taste preferences, track delivery, review spending and points (积分), set a budget, or check calories. Trigger whenever the user mentions 麦当劳, 金拱门, or McDonald&#x27;s — in any context, including very short commands like 点麦当劳. Also trigger when a user wants to order or manage preferences involving named McDonald&#x27;s products (巨无霸, 麦辣鸡腿堡, etc.). Exclude: KFC/肯德基, Burger King/汉堡王, general food or restaurant recommendations, unbranded 外卖/快餐 queries, and bank/card rewards programs.</p>
+        <p><strong>Best Score:</strong> in progress (train)</p>
+        <p><strong>Iterations:</strong> 3 | <strong>Train:</strong> 12 | <strong>Test:</strong> 8</p>
+    </div>
+
+    <div class="legend">
+        <span style="font-weight:600">Query columns:</span>
+        <span class="legend-item"><span class="legend-swatch swatch-positive"></span> Should trigger</span>
+        <span class="legend-item"><span class="legend-swatch swatch-negative"></span> Should NOT trigger</span>
+        <span class="legend-item"><span class="legend-swatch swatch-train"></span> Train</span>
+        <span class="legend-item"><span class="legend-swatch swatch-test"></span> Test</span>
+    </div>
+
+    <div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Iter</th>
+                <th>Train</th>
+                <th>Test</th>
+                <th class="query-col">Description</th>
+                <th class="positive-col">帮我把麦当劳的口味偏好改成不吃辣，上次那个麦辣鸡腿堡把我辣得够呛</th>
+                <th class="positive-col">我这个月在麦当劳花了多少钱了，帮我拉个账单看看</th>
+                <th class="positive-col">今天中午不知道吃啥好，看看麦当劳有啥能点的，预算50以内</th>
+                <th class="positive-col">最近金拱门有什么新品上线吗，想吃点不一样的</th>
+                <th class="positive-col">点麦当劳</th>
+                <th class="positive-col">帮我看看麦当劳今天有什么优惠活动，好久没吃了想看看有啥划算的套餐</th>
+                <th class="negative-col">查一下我的招商银行信用卡积分还有多少</th>
+                <th class="negative-col">帮我对比一下麦当劳和肯德基哪个更划算，我中午想吃快餐</th>
+                <th class="negative-col">巨无霸的热量是多少卡路里，我在减肥想算算</th>
+                <th class="negative-col">帮我点一份肯德基的吮指原味鸡桶，送到公司</th>
+                <th class="negative-col">附近有什么好吃的餐厅推荐吗，川菜粤菜都行</th>
+                <th class="negative-col">我的外卖怎么还没到啊，都等了半小时了也不知道找谁</th>
+                <th class="test-col positive-col">领一下麦当劳的优惠券，别浪费了</th>
+                <th class="test-col positive-col">查一下我的麦当劳积分还有多少，上次好像有快过期的了</th>
+                <th class="test-col positive-col">我想吃巨无霸了，能帮我点一个送到家吗，用我之前常用的那个地址就行</th>
+                <th class="test-col positive-col">帮我追踪一下这个麦当劳的订单 1030938730000733964700499858，看看骑手到哪了</th>
+                <th class="test-col negative-col">麦当劳的股票最近走势怎么样，MCD现在什么价位</th>
+                <th class="test-col negative-col">帮我追踪这个快递单号 SF1234567890123，看看到哪了</th>
+                <th class="test-col negative-col">汉堡怎么做才好吃，我想在家自己做一个巨无霸</th>
+                <th class="test-col negative-col">帮我写一个快餐店的点餐系统，要支持菜品管理、下单、支付这些功能</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="best-row">
+                <td>1</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">McDonald&#x27;s (麦当劳 / 金拱门) food delivery ordering, deals, coupons, points tracking, and account management. Use this whenever the user mentions McDonald&#x27;s, 麦当劳, 金拱门, ordering fast food, checking food deals or coupons, tracking a food delivery order, checking loyalty points or 积分, or managing food preferences. Also trigger when the user talks about 点餐, 外卖, 快餐 in contexts that could involve McDonald&#x27;s, or when they want to order a meal, check what deals are available, or track a food order number.</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+            <tr class="">
+                <td>2</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">Use this for any McDonald&#x27;s (麦当劳 / 金拱门) task: ordering food, checking deals or coupons, looking up points or 积分, tracking delivery, managing taste preferences, viewing spending history, checking calories, setting a budget, or browsing the menu. Trigger whenever the user mentions McDonald&#x27;s, 麦当劳, 金拱门, or any McDonald&#x27;s product (麦辣鸡腿堡, 巨无霸, etc.) — even in passing or in short commands like 点麦当劳. Do NOT trigger for KFC, 肯德基, Burger King, 汉堡王, general restaurant recommendations, generic 外卖 or 快餐 queries that don&#x27;t name McDonald&#x27;s, or credit card points from banks.</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+            <tr class="">
+                <td>3</td>
+                <td><span class="score score-ok">18/36</span></td>
+                <td><span class="score score-ok">12/24</span></td>
+                <td class="description">麦当劳 (McDonald&#x27;s / 金拱门): order meals, browse the menu, check deals and coupons, manage taste preferences, track delivery, review spending and points (积分), set a budget, or check calories. Trigger whenever the user mentions 麦当劳, 金拱门, or McDonald&#x27;s — in any context, including very short commands like 点麦当劳. Also trigger when a user wants to order or manage preferences involving named McDonald&#x27;s products (巨无霸, 麦辣鸡腿堡, etc.). Exclude: KFC/肯德基, Burger King/汉堡王, general food or restaurant recommendations, unbranded 外卖/快餐 queries, and bank/card rewards programs.</td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result fail">✗<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result fail">✗<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+                <td class="result test-result pass">✓<span class="rate">0/3</span></td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+</body>
+</html>
