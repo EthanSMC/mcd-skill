@@ -37,7 +37,7 @@ def step0_token_setup():
 
     print("📋 Token 配置指南:")
     print("   1. 打开麦当劳 App，登录你的账号")
-    print("   2. 访问 https://mcp.mcd.cn 官网")
+    print("   2. 访问 https://open.mcd.cn/mcp 官网")
     print("   3. 扫码授权，获取 Token")
     print("   4. 复制 Token，粘贴到这里")
     print()

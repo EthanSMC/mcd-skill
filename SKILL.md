@@ -20,7 +20,7 @@ A zero-configuration skill for the full McDonald's delivery experience — order
 
 Before using any feature, the user needs a valid McDonald's token:
 
-1. Ask the user to open the 麦当劳 App, log in, visit https://mcp.mcd.cn, scan the QR code to authorize, and copy the token.
+1. Ask the user to open the 麦当劳 App, log in, visit https://open.mcd.cn/mcp, scan the QR code to authorize, and copy the token.
 2. Save the token: `mkdir -p data && echo "<token>" > data/.mcd-token`
 3. Run the onboarding script to verify the token and initialize preferences:
    ```bash
@@ -37,24 +37,44 @@ If the user says they don't have a token, walk them through the steps above befo
 
 When the user says something like "点麦当劳" or "I want McDonald's", follow this sequence:
 
-### Step 1: Show today's surprises
-Run `scripts/mcd/surprise-alert.py` to display today's deals, new items, and limited-time offers. This gives the user context on what's available before they decide.
-
-### Step 2: Recommend or ask
+### Step 1: First-time user — offer historical order upload
 Check `data/mcd-orders.md` for the number of past orders:
 
-- **< 5 orders**: Don't try to analyze preferences — there isn't enough data. Just ask "What do you feel like eating?" and let the user browse freely.
-- **≥ 5 orders**: Run `scripts/mcd/smart-combo.py` to generate 3 personalized meal plans based on their taste profile and budget. Present all three with prices and tags.
+- **0 orders (first time)**: Ask the user if they'd like to upload their historical McDonald's orders (screenshot or text). This helps the system learn their tastes immediately instead of starting from scratch. Say: "这是你第一次点餐！如果你有历史订单记录（麦当劳App里的订单截图或文字），发给我可以更快了解你的口味偏好。当然也可以跳过直接点餐，你想怎么来？"
 
-### Step 3: Calculate price and apply best coupon
-Once the user picks a meal, use the MCP to calculate the price, then apply the best available coupon. Show the final price before creating the order.
+  - If the user provides historical orders: save them by running `scripts/mcd/save-order.py '<orderJSON>'` for each order, then proceed to Step 2. If total orders reach ≥5 after upload, run `scripts/mcd/analyze-history.py`.
+  - If the user skips: proceed directly to Step 2 — do NOT show any preset combo plans.
+
+- **1-4 orders**: Not enough data for smart combos. Skip to Step 2 and just ask the user what they want. Do NOT show preset combo plans.
+- **≥ 5 orders**: Run `scripts/mcd/smart-combo.py` to generate 3 personalized meal plans. Present all three with prices and tags.
+
+### Step 2: Show today's surprises
+Run `scripts/mcd/surprise-alert.py` to display today's deals, new items, and limited-time offers. This gives the user context on what's available before they decide.
+
+### Step 3: Ask user what they want
+- **< 5 orders**: DON'T show preset plans. Simply ask "今天想吃点什么？" and let the user freely describe what they want. Help them browse the menu if needed. Never run `smart-combo.py` or show the hardcoded PLANS for users with fewer than 5 orders.
+- **≥ 5 orders**: Present the 3 plans from `smart-combo.py` as options, and let the user pick or customize.
+
+### Step 4: Menu review and secondary confirmation (REQUIRED)
+Once the user has selected their items, BEFORE calculating the price or creating the order:
+
+1. **List the final menu** clearly with each item name and quantity.
+2. **Ask for explicit confirmation**: "确认以上菜单吗？"
+3. **Check for drinks and burgers**:
+   - If no **饮料 (drink)** is included: warn the user — "⚠️ 当前菜单没有饮料，是否需要加一杯？套餐搭配饮料会更划算。"
+   - If no **汉堡 (burger/sandwich)** is included: warn the user — "⚠️ 当前菜单没有汉堡/主食，是否需要加一个？"
+   - If both are present: no warning needed.
+4. Wait for the user to confirm or modify before proceeding.
+
+### Step 5: Calculate price and apply best coupon
+Only after the user confirms the menu, use the MCP to calculate the price, then apply the best available coupon. Show the final price before creating the order.
 
 Use `mcporter call mcdonalds.calculate-price` and `mcporter call mcdonalds.query-store-coupons` — see `docs/MCP_API.md` for exact parameters.
 
-### Step 4: Create order
+### Step 6: Create order
 Use `mcporter call mcdonalds.create-order` with the confirmed items. The API returns a payment link — share it with the user so they can pay through the McDonald's app.
 
-### Step 5: Post-order tracking
+### Step 7: Post-order tracking
 After the user shares the order number (34 digits):
 1. Run `scripts/mcd/track-order.py <orderNumber>` to track delivery status
 2. Run `scripts/mcd/save-order.py '<orderJSON>'` to record the order

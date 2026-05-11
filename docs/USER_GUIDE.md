@@ -6,12 +6,12 @@
 
 ### 1. 我需要准备什么？
 - 麦当劳 App 账号
-- mcp.mcd.cn 官网的授权 Token
+- open.mcd.cn/mcp 官网的授权 Token
 - 能运行 Python 3 的电脑/服务器
 
 ### 2. Token 怎么获取？
 1. 手机打开麦当劳 App，登录你的账号
-2. 电脑访问 https://mcp.mcd.cn ，扫码授权
+2. 电脑访问 https://open.mcd.cn/mcp ，扫码授权
 3. 复制生成的 Token（格式 `xxxx-xxxx-xxxx`）
 
 ### 3. 第一次用
@@ -64,7 +64,7 @@ Agent：展示今日/本周/本月累计热量
 ## 常见问题
 
 **Q: Token 过期了怎么办？**
-A: 去 mcp.mcd.cn 重新获取，然后更新 `data/.mcd-token` 文件。
+A: 去 open.mcd.cn/mcp 重新获取，然后更新 `data/.mcd-token` 文件。
 
 **Q: 积分会自动兑换吗？**
 A: 会的。每月最后一天 10:00，会自动兑换性价比最高的方案。

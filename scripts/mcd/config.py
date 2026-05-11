@@ -57,7 +57,7 @@ MCP_TOKEN = os.environ.get("MCD_MCP_TOKEN", "")
 if not MCP_TOKEN and os.path.exists(TOKEN_FILE):
     MCP_TOKEN = open(TOKEN_FILE).read().strip()
 
-MCP_URL = os.environ.get("MCD_MCP_URL", "https://mcp.mcd.cn/mcp-servers/mcd-mcp")
+MCP_URL = os.environ.get("MCD_MCP_URL", "https://open.mcd.cn/mcp-servers/mcd-mcp")
 
 # ── 便捷函数 ──────────────────────────────────────
 def mcd_log(msg):
@@ -83,7 +83,7 @@ def mcd_check_token():
         print()
         print("如何获取 Token：")
         print("  1. 打开麦当劳 App 登录账号")
-        print("  2. 访问 mcp.mcd.cn 官网扫码授权")
+        print("  2. 访问 open.mcd.cn/mcp 官网扫码授权")
         print("  3. 复制 Token，粘贴到上面命令行")
         return False
     return True

@@ -30,13 +30,13 @@ npm install -g mcporter
 # 配置麦当劳 MCP Server
 mcporter server add mcdonalds \
   --header "Authorization=Bearer YOUR_TOKEN" \
-  --url "https://mcp.mcd.cn/mcp-servers/mcd-mcp"
+  --url "https://open.mcd.cn/mcp-servers/mcd-mcp"
 ```
 
 ### 2. 获取 Token
 
 1. 打开 **麦当劳 App**，登录你的账号
-2. 访问 **[mcp.mcd.cn](https://open.mcd.cn/mcp)** 官网
+2. 访问 **[open.mcd.cn/mcp](https://open.mcd.cn/mcp)** 官网
 3. 扫码授权，获取 Token（格式 `xxxx-xxxx-xxxx`）
 4. 将 Token 写入本地配置：
 

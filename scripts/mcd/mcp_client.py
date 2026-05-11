@@ -18,7 +18,7 @@ try:
     from config import MCP_TOKEN, MCP_URL, TOKEN_FILE, mcd_err
 except ImportError:
     MCP_TOKEN = os.environ.get("MCD_MCP_TOKEN", "")
-    MCP_URL = "https://mcp.mcd.cn/mcp-servers/mcd-mcp"
+    MCP_URL = "https://open.mcd.cn/mcp-servers/mcd-mcp"
     def mcd_err(msg): pass
 
 
